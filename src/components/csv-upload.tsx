@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, FileRejection } from "react-dropzone";
 import { Upload, FileText, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { usePostHog } from 'posthog-js/react';
+import { toast } from "sonner";
 
 interface CSVUploadProps {
   onFileUpload: (file: File) => void;
@@ -13,16 +15,40 @@ interface CSVUploadProps {
 
 export function CSVUpload({ onFileUpload }: CSVUploadProps) {
   const [isDragActive, setIsDragActive] = useState(false);
+  const posthog = usePostHog();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file && file.type === "text/csv") {
       onFileUpload(file);
+      if (posthog) {
+        posthog.capture('file_uploaded', {
+          file_name: file.name,
+          file_type: file.type,
+          file_size: file.size,
+        });
+      }
     }
-  }, [onFileUpload]);
+  }, [onFileUpload, posthog]);
+
+  const onDropRejected = useCallback((rejectedFiles: FileRejection[]) => {
+    setIsDragActive(false);
+    rejectedFiles.forEach(({ file, errors }) => {
+      errors.forEach(error => {
+        if (error.code === 'file-invalid-type') {
+          toast.error(`Invalid file type: ${file.name}. Please upload a CSV file.`);
+        } else if (error.code === 'file-too-large') {
+          toast.error(`File is too large: ${file.name}. Maximum size is 2GB.`);
+        } else {
+          toast.error(`Error uploading ${file.name}: ${error.message}`);
+        }
+      });
+    });
+  }, []);
 
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop,
+    onDropRejected,
     accept: {
       "text/csv": [".csv"],
     },
@@ -31,7 +57,6 @@ export function CSVUpload({ onFileUpload }: CSVUploadProps) {
     onDragEnter: () => setIsDragActive(true),
     onDragLeave: () => setIsDragActive(false),
     onDropAccepted: () => setIsDragActive(false),
-    onDropRejected: () => setIsDragActive(false),
   });
 
   return (

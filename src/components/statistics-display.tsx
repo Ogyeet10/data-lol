@@ -60,7 +60,7 @@ export function StatisticsDisplay({ statistics, serviceType }: StatisticsDisplay
         <Card className="shadow-sm border-border/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Requests</CardTitle>
-            <Hash className="h-4 w-4 text-muted-foreground" />
+            <Hash className="h-4 w-4 text-muted-foreground text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{statistics.total.toLocaleString()}</div>
@@ -74,16 +74,13 @@ export function StatisticsDisplay({ statistics, serviceType }: StatisticsDisplay
         <Card className="shadow-sm border-border/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Average Time</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="h-4 w-4 text-muted-foreground text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{statistics.mean}</div>
             <p className="text-xs text-muted-foreground">
               {formatDays(Math.round(statistics.mean))}
             </p>
-            <div className={`text-xs font-medium mt-1 ${meanIndicator.color}`}>
-              {meanIndicator.label}
-            </div>
           </CardContent>
         </Card>
 
@@ -91,96 +88,16 @@ export function StatisticsDisplay({ statistics, serviceType }: StatisticsDisplay
         <Card className="shadow-sm border-border/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Median Time</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <Target className="h-4 w-4 text-muted-foreground text-purple-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{statistics.median}</div>
             <p className="text-xs text-muted-foreground">
               {formatDays(Math.round(statistics.median))}
             </p>
-            <div className={`text-xs font-medium mt-1 ${medianIndicator.color}`}>
-              {medianIndicator.label}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Processing Speed */}
-        <Card className="shadow-sm border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Processing Speed</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {statistics.median <= 1 ? "⚡" : statistics.median <= 7 ? "🚀" : "🐌"}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {statistics.median <= 1 ? "Lightning fast" : 
-               statistics.median <= 7 ? "Fast processing" : "Needs improvement"}
-            </p>
           </CardContent>
         </Card>
       </div>
-
-      {/* Detailed Analysis */}
-      <Card className="shadow-sm border-border/50">
-        <CardHeader>
-          <CardTitle>Analysis Summary</CardTitle>
-          <CardDescription>
-            Key insights from the data
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-muted/50 rounded-xl border border-border/30">
-              <h4 className="font-medium mb-2">Mean vs Median</h4>
-              <p className="text-sm text-muted-foreground">
-                {statistics.mean > statistics.median ? (
-                  <>
-                    The mean ({statistics.mean} days) is higher than the median ({statistics.median} days), 
-                    indicating some requests take significantly longer to close, skewing the average upward.
-                  </>
-                ) : statistics.mean < statistics.median ? (
-                  <>
-                    The mean ({statistics.mean} days) is lower than the median ({statistics.median} days), 
-                    suggesting most requests are processed quickly with fewer outliers.
-                  </>
-                ) : (
-                  <>
-                    The mean and median are equal ({statistics.mean} days), indicating a balanced 
-                    distribution of processing times.
-                  </>
-                )}
-              </p>
-            </div>
-
-            <div className="p-4 bg-muted/50 rounded-xl border border-border/30">
-              <h4 className="font-medium mb-2">Performance Rating</h4>
-              <p className="text-sm text-muted-foreground">
-                Based on the median processing time of {statistics.median} days, this service type 
-                is performing at a <span className={`font-medium ${medianIndicator.color}`}>
-                {medianIndicator.label.toLowerCase()}</span> level. 
-                {statistics.median > 7 && " Consider reviewing processes to improve response times."}
-                {statistics.median <= 3 && " This is excellent performance for service request processing."}
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
-            <h4 className="font-medium mb-2 text-primary">Recommendation</h4>
-            <p className="text-sm">
-              {statistics.median <= 1 ? 
-                "Excellent performance! This service type is being handled very efficiently." :
-                statistics.median <= 7 ?
-                "Good performance. Consider this as a benchmark for other service types." :
-                statistics.median <= 14 ?
-                "Performance could be improved. Consider analyzing bottlenecks in the process." :
-                "Significant delays detected. This service type may need process optimization or additional resources."
-              }
-            </p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

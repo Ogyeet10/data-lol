@@ -156,7 +156,6 @@ export function HourAnalysisChart({ data, hourData, title }: HourAnalysisChartPr
         <div className="mt-4 text-sm text-muted-foreground">
           <p>
             Chart shows the number of service requests created by hour of day. 
-            This helps identify peak demand periods and staffing needs.
           </p>
         </div>
       </CardContent>
