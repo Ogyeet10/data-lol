@@ -10,7 +10,7 @@ export default function Home() {
       {/* Enhanced Header */}
       <header className="relative bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl sticky top-0 z-50 border-b border-border/50">
         {/* Animated background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 animate-pulse opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50"></div>
         
         {/* Subtle top border with gradient */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
@@ -23,7 +23,7 @@ export default function Home() {
               <div className="relative">
                 <div className="h-8 w-8 bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-xl flex items-center justify-center shadow-md shadow-primary/20 group-hover:shadow-lg group-hover:shadow-primary/30 transition-all duration-300 group-hover:scale-105">
                   <BarChart3 className="h-4 w-4 text-primary-foreground" />
-                  <Sparkles className="h-2 w-2 text-primary-foreground/60 absolute -top-0.5 -right-0.5 animate-pulse" />
+                  <Sparkles className="h-2 w-2 text-primary-foreground/60 absolute -top-0.5 -right-0.5" />
                 </div>
                 {/* Compact glow effect */}
                 <div className="absolute inset-0 h-8 w-8 bg-primary/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
