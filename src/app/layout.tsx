@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { PHProvider, PostHogPageview } from "./providers";
 import { Suspense } from 'react';
 import MyStatsig from "./my-statsig";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,6 +53,7 @@ export default function RootLayout({
             </ThemeProvider>
           </MyStatsig>
         </PHProvider>
+        <Analytics />
       </body>
     </html>
   );
