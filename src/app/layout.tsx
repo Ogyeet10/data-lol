@@ -41,17 +41,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-300 ease-in-out`}
       >
         <PHProvider>
-          <MyStatsig>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              enableColorScheme={false}
-            >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            enableColorScheme={false}
+          >
+            <MyStatsig>
               {children}
-              <Toaster richColors closeButton={true} />
-            </ThemeProvider>
-          </MyStatsig>
+            </MyStatsig>
+            <Toaster richColors closeButton={true} />
+          </ThemeProvider>
         </PHProvider>
         <Analytics />
       </body>

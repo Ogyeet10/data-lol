@@ -13,7 +13,7 @@ export default function MyStatsig({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <StatsigProvider client={client} loadingComponent={<div>Loading...</div>}>
+    <StatsigProvider client={client} loadingComponent={<></>}>
       {children}
     </StatsigProvider>
   );
