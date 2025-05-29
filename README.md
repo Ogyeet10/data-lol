@@ -2,8 +2,6 @@
 
 data(lol) is a website built for an ECS class. It is a great looking React/Next.js implementation of data analysis code that was provided by my teacher.
 
->This project is licensed under the GPL-3.0 License.
-
 ## Getting Started
 
 First, install the dependencies:
