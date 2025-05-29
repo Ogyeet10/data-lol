@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { PHProvider, PostHogPageview } from "./providers";
+import { Suspense } from 'react';
+import MyStatsig from "./my-statsig";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,18 +33,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="transition-colors duration-300 ease-in-out">
+      <Suspense>
+        <PostHogPageview />
+      </Suspense>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-300 ease-in-out`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          enableColorScheme={false}
-        >
-          {children}
-          <Toaster richColors closeButton={true} />
-        </ThemeProvider>
+        <PHProvider>
+          <MyStatsig>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              enableColorScheme={false}
+            >
+              {children}
+              <Toaster richColors closeButton={true} />
+            </ThemeProvider>
+          </MyStatsig>
+        </PHProvider>
       </body>
     </html>
   );

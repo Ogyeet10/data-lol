@@ -3,10 +3,13 @@
 import { CSVAnalyzer } from "@/components/csv-analyzer";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BarChart3, FileText, Clock, Sparkles, Github } from "lucide-react";
+import { useFeatureGate } from "@statsig/react-bindings";
 
 export default function Home() {
+  const { value: heroSectionEnabled } = useFeatureGate("hero_section_enabled");
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/50 flex flex-col">
       {/* Enhanced Header */}
       <header className="relative bg-gradient-to-r from-background/95 via-background/90 to-background/95 backdrop-blur-xl sticky top-0 z-50 border-b border-border/50">
         {/* Animated background gradient */}
@@ -54,49 +57,51 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="max-w-4xl mx-auto">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <h2 className="text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-              Spreadsheets Are For Losers
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              Why not use JavaScript instead? Upload your CSV, get fast calculations with gorgeous visualizations. 
-              Process 100MB+ files without breaking a sweat.
-            </p>
-            
-            {/* Enhanced Feature Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <div className="group p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-2xl transition-colors transition-shadow transition-transform duration-300 border border-border/50 hover:border-primary/30 hover:-translate-y-1">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-600/10 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <FileText className="h-8 w-8 text-blue-500" />
+          {/* Hero Section - Conditionally rendered */}
+          {heroSectionEnabled && (
+            <div className="text-center mb-12">
+              <h2 className="text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
+                Spreadsheets Are For Losers
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                Why not use JavaScript instead? Upload your CSV, get fast calculations with gorgeous visualizations. 
+                Process 100MB+ files without breaking a sweat.
+              </p>
+              
+              {/* Enhanced Feature Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div className="group p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-2xl transition-colors transition-shadow transition-transform duration-300 border border-border/50 hover:border-primary/30 hover:-translate-y-1">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-600/10 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <FileText className="h-8 w-8 text-blue-500" />
+                  </div>
+                  <h3 className="font-bold mb-3 text-lg">Date Difference Magic</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Instantly calculate time differences between created and closed dates with precision
+                  </p>
                 </div>
-                <h3 className="font-bold mb-3 text-lg">Date Difference Magic</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Instantly calculate time differences between created and closed dates with precision
-                </p>
-              </div>
-              <div className="group p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-2xl transition-colors transition-shadow transition-transform duration-300 border border-border/50 hover:border-primary/30 hover:-translate-y-1">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/10 to-purple-600/10 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Clock className="h-8 w-8 text-purple-500" />
+                <div className="group p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-2xl transition-colors transition-shadow transition-transform duration-300 border border-border/50 hover:border-primary/30 hover:-translate-y-1">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/10 to-purple-600/10 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <Clock className="h-8 w-8 text-purple-500" />
+                  </div>
+                  <h3 className="font-bold mb-3 text-lg">Hour-by-Hour Insights</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Discover patterns in your data by analyzing request creation times
+                  </p>
                 </div>
-                <h3 className="font-bold mb-3 text-lg">Hour-by-Hour Insights</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Discover patterns in your data by analyzing request creation times
-                </p>
-              </div>
-              <div className="group p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-2xl transition-colors transition-shadow transition-transform duration-300 border border-border/50 hover:border-primary/30 hover:-translate-y-1">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-green-500/10 to-green-600/10 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <BarChart3 className="h-8 w-8 text-green-500" />
+                <div className="group p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 shadow-lg hover:shadow-2xl transition-colors transition-shadow transition-transform duration-300 border border-border/50 hover:border-primary/30 hover:-translate-y-1">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-green-500/10 to-green-600/10 w-fit mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <BarChart3 className="h-8 w-8 text-green-500" />
+                  </div>
+                  <h3 className="font-bold mb-3 text-lg">Geographic Intelligence</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Map your data geographically with ZIP code analysis and trends
+                  </p>
                 </div>
-                <h3 className="font-bold mb-3 text-lg">Geographic Intelligence</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Map your data geographically with ZIP code analysis and trends
-                </p>
               </div>
             </div>
-          </div>
+          )}
 
           {/* CSV Analyzer Component */}
           <CSVAnalyzer />
@@ -104,7 +109,7 @@ export default function Home() {
       </main>
 
       {/* Clean, minimal footer */}
-      <footer className="mt-20 border-t border-border/50 bg-gradient-to-t from-muted/30 to-transparent">
+      <footer className="mt-auto border-t border-border/50 bg-gradient-to-t from-muted/30 to-transparent">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             {/* Brand */}

@@ -38,8 +38,12 @@ export function AnalysisChart({ data, title }: AnalysisChartProps) {
       
       if (daysDiffs.length === 0) return [];
       
-      const maxDays = Math.max(...daysDiffs);
-      const minDays = Math.min(...daysDiffs);
+      // const maxDays = Math.max(...daysDiffs); // Original
+      // const minDays = Math.min(...daysDiffs); // Original
+
+      // Safer way to calculate max and min for large arrays
+      const maxDays = daysDiffs.reduce((max, current) => current > max ? current : max, -Infinity);
+      const minDays = daysDiffs.reduce((min, current) => current < min ? current : min, Infinity);
       
       // Determine bin size based on data range
       let binSize = 1;
@@ -57,7 +61,8 @@ export function AnalysisChart({ data, title }: AnalysisChartProps) {
       }
 
       const binValues = Object.values(bins);
-      const maxCount = binValues.length > 0 ? Math.max(...binValues) : 1;
+      // const maxCount = binValues.length > 0 ? Math.max(...binValues) : 1; // Original
+      const maxCount = binValues.length > 0 ? binValues.reduce((max, current) => current > max ? current : max, -Infinity) : 1; // Safer calculation
 
       // Convert to chart data format
       const chartEntries = Object.entries(bins)
