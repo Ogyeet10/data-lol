@@ -404,6 +404,48 @@ export function CSVAnalyzer() {
     }
   }, [getFilteredData]);
 
+  const getFilteredZipData = useCallback(() => {
+    try {
+      if (!results || !results.zipData) return [];
+      if (selectedServiceType === "all") return results.zipData;
+      
+      // Get filtered data based on service type
+      const filteredData = getFilteredData();
+      
+      // Aggregate ZIP data from filtered records
+      const zipCodeData: { [zip: string]: { dayDiffs: number[], count: number } } = {};
+      
+      for (const record of filteredData) {
+        const zipCode = record.zipCode || 'N/A';
+        if (!zipCodeData[zipCode]) {
+          zipCodeData[zipCode] = { dayDiffs: [], count: 0 };
+        }
+        if (record.closedDate) { // Only include records with closed dates for dayDiff calculation
+          zipCodeData[zipCode].dayDiffs.push(record.daysDiff);
+        }
+        zipCodeData[zipCode].count++;
+      }
+      
+      // Create filtered ZIP data array
+      const filteredZipData: ZipData[] = Object.entries(zipCodeData).map(([zip, data]) => {
+        const sortedDiffs = [...data.dayDiffs].sort((a,b) => a - b);
+        const zipMean = sortedDiffs.length > 0 ? sortedDiffs.reduce((sum, val) => sum + val, 0) / sortedDiffs.length : 0;
+        const zipMedian = sortedDiffs.length > 0 ? (sortedDiffs.length % 2 === 0 ? (sortedDiffs[sortedDiffs.length / 2 - 1] + sortedDiffs[sortedDiffs.length / 2]) / 2 : sortedDiffs[Math.floor(sortedDiffs.length / 2)]) : 0;
+        return {
+          zipCode: zip,
+          mean: Math.round(zipMean * 100) / 100,
+          median: Math.round(zipMedian * 100) / 100,
+          count: data.count
+        };
+      }).sort((a,b) => b.count - a.count); // Sort by count descending
+      
+      return filteredZipData;
+    } catch (error) {
+      console.error('Error calculating filtered ZIP data:', error);
+      return [];
+    }
+  }, [results, selectedServiceType, getFilteredData]);
+
   if (!results && !isProcessing) {
     return <CSVUpload onFileUpload={handleFileUpload} />;
   }
@@ -510,7 +552,7 @@ export function CSVAnalyzer() {
                 
                 <TabsContent value="zip" className="space-y-4">
                   <ZipAnalysisChart 
-                    zipData={results.zipData || []} 
+                    zipData={getFilteredZipData()} 
                     title={selectedServiceType === "all" ? "All Service Types" : selectedServiceType}
                   />
                 </TabsContent>
